@@ -5,7 +5,7 @@
 
 // I AM NOT DONE
 
-const NUMBER = 3;
 fn main() {
+    const NUMBER: i32 = 3;
     println!("Number {}", NUMBER);
 }
