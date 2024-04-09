@@ -10,13 +10,13 @@
 // hint.
 
 // I AM NOT DONE
-
-pub fn generate_nametag_text(name: String) -> Option<String> {
+use std::io;
+pub fn generate_nametag_text(name: String) -> Result<String, &'static str> {
     if name.is_empty() {
         // Empty names aren't allowed.
-        None
+        Err("`name` was empty; it must be nonempty.")
     } else {
-        Some(format!("Hi! My name is {}", name))
+        Ok(format!("Hi! My name is {}", name))
     }
 }
 
