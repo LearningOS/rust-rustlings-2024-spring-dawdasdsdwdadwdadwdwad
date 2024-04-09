@@ -6,7 +6,6 @@
 // I AM NOT DONE
 
 use std::sync::mpsc;
-use std::sync::Arc;
 use std::thread;
 use std::time::Duration;
 
@@ -26,40 +25,35 @@ impl Queue {
     }
 }
 
-fn send_tx(q: Queue, tx: mpsc::Sender<u32>) -> () {
-    let qc = Arc::new(q);
-    let qc1 = Arc::clone(&qc);
-    let qc2 = Arc::clone(&qc);
-
-    thread::spawn(move || {
-        for val in &qc1.first_half {
-            println!("sending {:?}", val);
-            tx.send(*val).unwrap();
-            thread::sleep(Duration::from_secs(1));
-        }
-    });
-
-    thread::spawn(move || {
-        for val in &qc2.second_half {
-            println!("sending {:?}", val);
-            tx.send(*val).unwrap();
-            thread::sleep(Duration::from_secs(1));
-        }
-    });
-}
-
 fn main() {
-    let (tx, rx) = mpsc::channel();
+    let (tx, rx) = mpsc::channel(); // 创建一个 mpsc 通道
     let queue = Queue::new();
     let queue_length = queue.length;
 
-    send_tx(queue, tx);
+    let tx1 = tx.clone(); // 复制发送端
+    let first_half_thread = thread::spawn(move || {
+        for val in &queue.first_half {
+            tx1.send(*val).unwrap(); // 发送值到通道
+            thread::sleep(Duration::from_secs(1)); // 模拟延迟
+        }
+    });
+
+    let tx2 = tx; // 使用原始发送端
+    let second_half_thread = thread::spawn(move || {
+        for val in &queue.second_half {
+            tx2.send(*val).unwrap(); // 发送值到通道
+            thread::sleep(Duration::from_secs(1)); // 模拟延迟
+        }
+    });
 
     let mut total_received: u32 = 0;
     for received in rx {
         println!("Got: {}", received);
         total_received += 1;
     }
+
+    first_half_thread.join().unwrap();
+    second_half_thread.join().unwrap();
 
     println!("total numbers received: {}", total_received);
     assert_eq!(total_received, queue_length)
