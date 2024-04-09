@@ -11,7 +11,10 @@
 // I AM NOT DONE
 
 pub trait Licensed {
-    fn licensing_info(&self) -> String;
+    fn licensing_info(&self) -> String {
+        let information = String::from("Some information");
+        information
+    }
 }
 
 struct SomeSoftware {
