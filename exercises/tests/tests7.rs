@@ -44,6 +44,7 @@ mod tests {
 
     #[test]
     fn test_success() {
+        println!("hello");
         let timestamp = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
             .unwrap()
