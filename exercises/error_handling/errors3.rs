@@ -7,8 +7,6 @@
 // Execute `rustlings hint errors3` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
-
 use std::error::Error;
 use std::num::ParseIntError;
 fn main() -> Result<(), Box<dyn Error>> {

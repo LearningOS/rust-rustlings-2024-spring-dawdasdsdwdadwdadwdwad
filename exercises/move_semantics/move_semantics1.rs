@@ -3,8 +3,6 @@
 // Execute `rustlings hint move_semantics1` or use the `hint` watch subcommand
 // for a hint.
 
-// I AM NOT DONE
-
 fn main() {
     let mut vec0 = Vec::new();
 

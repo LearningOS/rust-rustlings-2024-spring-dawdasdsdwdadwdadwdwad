@@ -9,7 +9,6 @@
 // Execute `rustlings hint errors1` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
 use std::io;
 pub fn generate_nametag_text(name: String) -> Result<String, &'static str> {
     if name.is_empty() {

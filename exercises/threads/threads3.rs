@@ -3,8 +3,6 @@
 // Execute `rustlings hint threads3` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
-
 use std::sync::mpsc;
 use std::thread;
 use std::time::Duration;
