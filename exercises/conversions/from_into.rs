@@ -7,6 +7,8 @@
 // Execute `rustlings hint from_into` or use the `hint` watch subcommand for a
 // hint.
 
+use std::default;
+
 #[derive(Debug)]
 struct Person {
     name: String,
@@ -44,6 +46,22 @@ impl Default for Person {
 
 impl From<&str> for Person {
     fn from(s: &str) -> Person {
+        let mut part = s.split(',');
+        let name = match part.next() {
+            Some(n) if !n.is_empty() => n.to_owned(),
+            _ => return Person::default(),
+        };
+        let age = match part.next() {
+            Some(a) => match a.parse::<usize>() {
+                Ok(age) => age,
+                Err(_) => return Person::default(),
+            },
+            _ => return Person::default(),
+        };
+        if part.next().is_some() {
+            return Person::default();
+        }
+        Person { name, age }
     }
 }
 
