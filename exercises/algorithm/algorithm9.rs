@@ -1,8 +1,7 @@
 /*
-	heap
-	This question requires you to implement a binary heap function
+    heap
+    This question requires you to implement a binary heap function
 */
-// I AM NOT DONE
 
 use std::cmp::Ord;
 use std::default::Default;
@@ -36,12 +35,27 @@ where
         self.len() == 0
     }
 
-    pub fn add(&mut self, value: T) {
-        //TODO
-    }
-
     fn parent_idx(&self, idx: usize) -> usize {
         idx / 2
+    }
+    pub fn add(&mut self, value: T) {
+        //TODO
+        if self.count == 0 {
+            self.items.remove(0);
+            println!("成功移除0!");
+        }
+        self.items.push(value);
+        self.count = self.count + 1;
+        let mut index = self.count;
+        while index > 1 {
+            let parent = self.parent_idx(index);
+            if (self.comparator)(&self.items[index - 1], &self.items[parent - 1]) {
+                self.items.swap(index - 1, parent - 1);
+                index = parent;
+            } else {
+                break;
+            }
+        }
     }
 
     fn children_present(&self, idx: usize) -> bool {
@@ -58,7 +72,16 @@ where
 
     fn smallest_child_idx(&self, idx: usize) -> usize {
         //TODO
-		0
+        let left_idx = self.left_child_idx(idx);
+        let right_idx = self.right_child_idx(idx);
+
+        if right_idx <= self.count
+            && (self.comparator)(&self.items[right_idx], &self.items[left_idx])
+        {
+            right_idx
+        } else {
+            left_idx
+        }
     }
 }
 
@@ -84,8 +107,24 @@ where
     type Item = T;
 
     fn next(&mut self) -> Option<T> {
-        //TODO
-		None
+        if self.is_empty() {
+            return None;
+        }
+        println!("now count is {}", self.count);
+        let mut idx = 1;
+        self.items.swap(0, self.count - 1);
+        println!("in function next before remove count is {}", self.count);
+        let mut root = self.items.remove(self.count - 1);
+        self.count -= 1;
+        println!("remove success!");
+        println!("in function next after remove count is {}", self.count);
+        let mut circle = self.count - 1;
+        let mut countcir = 0;
+        while circle != countcir {
+            self.items.swap(countcir, countcir + 1);
+            countcir += 1;
+        }
+        Some(root)
     }
 }
 
@@ -129,8 +168,15 @@ mod tests {
         heap.add(2);
         heap.add(9);
         heap.add(11);
+
+        println!("count is {}", heap.count);
         assert_eq!(heap.len(), 4);
         assert_eq!(heap.next(), Some(2));
+        let mut count = 1;
+        for i in heap.items.iter() {
+            println!("第{count}个是{i}");
+            count += 1;
+        }
         assert_eq!(heap.next(), Some(4));
         assert_eq!(heap.next(), Some(9));
         heap.add(1);
@@ -144,8 +190,15 @@ mod tests {
         heap.add(2);
         heap.add(9);
         heap.add(11);
+
+        println!("count is {}", heap.count);
         assert_eq!(heap.len(), 4);
         assert_eq!(heap.next(), Some(11));
+        let mut count = 1;
+        for i in heap.items.iter() {
+            println!("第{count}个是{i}");
+            count += 1;
+        }
         assert_eq!(heap.next(), Some(9));
         assert_eq!(heap.next(), Some(4));
         heap.add(1);
