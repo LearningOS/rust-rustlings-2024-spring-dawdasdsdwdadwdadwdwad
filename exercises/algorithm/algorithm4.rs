@@ -48,42 +48,44 @@ where
     // Insert a value into the BST
     fn insert(&mut self, value: T) {
         //TODO
-        if let Some(ref mut root) = self.root {
-            root.insert(value);
-        } else {
-            self.root = Some(Box::new(TreeNode::new(value)));
+        match self.root {
+            None => self.root = Some(Box::new(TreeNode::new(value))),
+            Some(ref mut node) => node.nodeinsert(value),
         }
     }
 
     // Search for a value in the BST
     fn search(&self, value: T) -> bool {
         //TODO
-        match self.root {
-            Some(ref root) => root.search(value),
-            None => false,
-        };
-        true
+        let mut current_node = &self.root;
+        while let Some(node) = current_node {
+            if value < node.value {
+                current_node = &node.left;
+            } else if value > node.value {
+                current_node = &node.right;
+            } else {
+                return true;
+            }
+        }
+        false
     }
 }
-
 impl<T> TreeNode<T>
 where
     T: Ord,
 {
     // Insert a node into the tree
-    fn insert(&mut self, value: T) {
+    fn nodeinsert(&mut self, value: T) {
         //TODO
         if value < self.value {
-            if let Some(ref mut left) = self.left {
-                left.insert(value);
-            } else {
-                self.left = Some(Box::new(TreeNode::new(value)));
+            match self.left {
+                None => self.left = Some(Box::new(TreeNode::new(value))),
+                Some(ref mut left_node) => left_node.nodeinsert(value),
             }
-        } else if value >= self.value {
-            if let Some(ref mut right) = self.right {
-                right.insert(value);
-            } else {
-                self.right = Some(Box::new(TreeNode::new(value)));
+        } else if value > self.value {
+            match self.right {
+                None => self.right = Some(Box::new(TreeNode::new(value))),
+                Some(ref mut right_node) => right_node.nodeinsert(value),
             }
         }
     }
